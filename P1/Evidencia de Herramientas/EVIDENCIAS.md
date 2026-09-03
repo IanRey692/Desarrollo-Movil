@@ -1,4 +1,4 @@
-<img width="952" height="603" alt="Captura de pantalla 2026-09-02 221255" src="https://github.com/user-attachments/assets/17eb3ef3-38c1-4468-ac4d-c32103a8947e" />## Evidencias de Configuración y Herramientas
+## Evidencias de Configuración y Herramientas
 
 En esta sección se documenta la verificación de las herramientas instaladas en el sistema operativo para el desarrollo de la Práctica 1.
 
