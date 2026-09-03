@@ -38,3 +38,7 @@ Cada versión de la aplicación cumple con mostrar el texto "Hola Mundo"
 * **Facilidad de desarrollo:** Jetpack Compose y Flutter permiten iterar y visualizar cambios de forma mucho más ágil en comparación con el enfoque tradicional de XML, el cual requiere gestionar la separación de la lógica en archivos de diseño y código por separado.
 * **Cantidad de código:** Las variantes de Jetpack Compose y Flutter requieren líneas de código considerablemente menores y más limpias gracias a sus paradigmas declarativos, a diferencia de los múltiples layouts y referencias por ID en Views.
 * **Diseño de interfaz:** Views (XML) otorga un control estricto de posicionamiento absoluto mediante restricciones, mientras que Compose y Flutter facilitan la jerarquía de elementos mediante componentes anidados y reutilizables.
+
+## Commits de Git
+<img width="1917" height="1015" alt="image" src="https://github.com/user-attachments/assets/f5365b69-092c-411b-b2ed-c9324ede9140" />
+
