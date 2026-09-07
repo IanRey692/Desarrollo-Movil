@@ -7,7 +7,9 @@ app = Flask(__name__)
 
 # 1. Configuración de la Base de Datos (SQLite)
 # El archivo se guardará en la carpeta del contenedor como 'site.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+# 1. Configuración de la Base de Datos (PostgreSQL)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@postgres:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
