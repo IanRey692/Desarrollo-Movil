@@ -21,19 +21,15 @@ interface ApiService {
 
     // --- RUTAS CRUD (PROTEGIDAS CON TOKEN) ---
 
-    @GET("alumnos")
-    fun obtenerAlumnos(@Header("Authorization") token: String): Call<AlumnosResponse>
+    @GET("juegos")
+    fun obtenerJuegos(@Header("Authorization") token: String): Call<VideojuegosResponse>
 
-    @POST("alumnos")
-    fun crearAlumno(@Header("Authorization") token: String, @Body alumno: Alumno): Call<ApiResponse>
+    @POST("juegos")
+    fun crearJuego(@Header("Authorization") token: String, @Body juego: Videojuego): Call<ApiResponse>
 
-    @PUT("alumnos/{id}")
-    fun actualizarAlumno(
-        @Header("Authorization") token: String,
-        @Path("id") id: Int,
-        @Body alumno: Alumno
-    ): Call<ApiResponse>
+    @PUT("juegos/{id}")
+    fun actualizarJuego(@Header("Authorization") token: String, @Path("id") id: Int, @Body juego: Videojuego): Call<ApiResponse>
 
-    @DELETE("alumnos/{id}")
-    fun borrarAlumno(@Header("Authorization") token: String, @Path("id") id: Int): Call<ApiResponse>
+    @DELETE("juegos/{id}")
+    fun borrarJuego(@Header("Authorization") token: String, @Path("id") id: Int): Call<ApiResponse>
 }

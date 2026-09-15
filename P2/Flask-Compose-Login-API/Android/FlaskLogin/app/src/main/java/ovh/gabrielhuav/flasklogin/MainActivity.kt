@@ -2,14 +2,14 @@ package ovh.gabrielhuav.flasklogin
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -19,21 +19,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import kotlinx.coroutines.launch
-import ovh.gabrielhuav.flasklogin.ui.theme.FlaskLoginTheme
+
+val GuindaFuerte = Color(0xFF6B1028)
+val GuindaOscuro = Color(0xFF420615)
+val GuindaClaro = Color(0xFFA6183D)
+
+val CustomColorScheme = lightColorScheme(
+    primary = GuindaFuerte,
+    onPrimary = Color.White,
+    secondary = GuindaOscuro,
+    tertiary = GuindaClaro,
+    onTertiary = Color.White
+)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            FlaskLoginTheme {
+            MaterialTheme(colorScheme = CustomColorScheme) {
                 AppNavigation()
             }
         }
@@ -44,166 +57,133 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation() {
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
-
     var sessionToken by remember { mutableStateOf("") }
     var sessionUsername by remember { mutableStateOf("") }
     var sessionIsAdmin by remember { mutableStateOf(false) }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        modifier = Modifier.fillMaxSize()
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = "role_selection",
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            // PANTALLA 1: ELEGIR ROL
-            composable("role_selection") {
-                RoleSelectionScreen(navController)
-            }
+    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }, modifier = Modifier.fillMaxSize()) { innerPadding ->
+        NavHost(navController = navController, startDestination = "welcome", modifier = Modifier.padding(innerPadding)) {
+            composable("welcome") { WelcomeScreen(navController) }
 
-            // PANTALLA 2: LOGIN / REGISTRO (Dinámico según el rol elegido)
-            composable("auth/{role}") { backStackEntry ->
-                val role = backStackEntry.arguments?.getString("role") ?: "alumno"
-                val isTeacherMode = role == "profesor"
-
+            composable("auth/{mode}") { backStackEntry ->
+                val isLoginMode = backStackEntry.arguments?.getString("mode") == "login"
                 AuthScreen(
-                    isTeacherMode = isTeacherMode,
+                    isLoginMode = isLoginMode,
                     snackbarHostState = snackbarHostState,
                     onBack = { navController.popBackStack() },
                     onLoginSuccess = { token, username, isAdmin ->
                         sessionToken = "Bearer $token"
                         sessionUsername = username
                         sessionIsAdmin = isAdmin
-                        navController.navigate("home") {
-                            popUpTo("role_selection") { inclusive = true }
-                        }
+                        navController.navigate("store") { popUpTo("welcome") { inclusive = true } }
                     }
                 )
             }
 
-            // PANTALLA 3: EL CRUD
-            composable("home") {
-                HomeScreen(
-                    token = sessionToken,
-                    username = sessionUsername,
-                    isAdmin = sessionIsAdmin,
-                    navController = navController,
-                    snackbarHostState = snackbarHostState
+            composable("store") {
+                StoreScreen(token = sessionToken, username = sessionUsername, isAdmin = sessionIsAdmin, navController = navController, snackbarHostState = snackbarHostState)
+            }
+        }
+    }
+}
+
+// ================= PANTALLA 1: BIENVENIDA =================
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WelcomeScreen(navController: NavController) {
+    var menuExpanded by remember { mutableStateOf(false) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("GameStore") },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = MaterialTheme.colorScheme.onPrimary, actionIconContentColor = MaterialTheme.colorScheme.onPrimary),
+                actions = {
+                    IconButton(onClick = { menuExpanded = true }) { Icon(Icons.Default.MoreVert, contentDescription = "Menú") }
+                    DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
+                        DropdownMenuItem(text = { Text("Iniciar Sesión") }, onClick = { menuExpanded = false; navController.navigate("auth/login") }, leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) })
+                        DropdownMenuItem(text = { Text("Registrarse") }, onClick = { menuExpanded = false; navController.navigate("auth/register") }, leadingIcon = { Icon(Icons.Default.Add, contentDescription = null) })
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier.fillMaxSize().padding(padding).padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                // 1. Título principal
+                Text(
+                    text = "Catálogo Digital",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // 2. Imagen en círculo (AQUÍ ESTÁ LA MAGIA)
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.img),
+                    contentDescription = "Imagen de bienvenida",
+                    modifier = Modifier
+                        .size(140.dp) // Tamaño del círculo
+                        .clip(androidx.compose.foundation.shape.CircleShape), // Recorta la imagen
+                    contentScale = androidx.compose.ui.layout.ContentScale.Crop // Ajusta la foto
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // 3. Descripción abajo de la imagen
+                Text(
+                    text = "Bienvenido a la tienda. \nInicia sesión para ver los mejores títulos.",
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-        }
-    }
-}
 
-// ================== PANTALLA 1: SELECCIÓN DE ROL ==================
-@Composable
-fun RoleSelectionScreen(navController: NavController) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.AccountCircle,
-            contentDescription = "Logo",
-            modifier = Modifier.size(100.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Bienvenido al Sistema",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Text(
-            text = "Selecciona tu perfil para continuar",
-            fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 32.dp)
-        )
+            // Botones inferiores que ya tenías
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Button(
+                    onClick = { navController.navigate("auth/login") },
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) { Text("Iniciar Sesión", fontSize = 16.sp) }
 
-        RoleCard(
-            title = "Profesor",
-            description = "Acceso total para gestionar a los alumnos",
-            icon = Icons.Default.Star,
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            onClick = { navController.navigate("auth/profesor") }
-        )
+                Spacer(modifier = Modifier.height(12.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        RoleCard(
-            title = "Alumno",
-            description = "Acceso para completar tu perfil estudiantil",
-            icon = Icons.Default.Person,
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-            onClick = { navController.navigate("auth/alumno") }
-        )
-    }
-}
-
-@Composable
-fun RoleCard(title: String, description: String, icon: androidx.compose.ui.graphics.vector.ImageVector, containerColor: Color, contentColor: Color, onClick: () -> Unit) {
-    ElevatedCard(
-        modifier = Modifier.fillMaxWidth().height(120.dp).clickable { onClick() },
-        colors = CardDefaults.elevatedCardColors(containerColor = containerColor),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(48.dp), tint = contentColor)
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(text = title, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = contentColor)
-                Text(text = description, fontSize = 14.sp, color = contentColor.copy(alpha = 0.8f))
+                OutlinedButton(
+                    onClick = { navController.navigate("auth/register") },
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) { Text("Crear Cuenta Nueva", fontSize = 16.sp) }
             }
         }
     }
 }
 
-// ================== PANTALLA 2: AUTENTICACIÓN ==================
+// ================= PANTALLA 2: AUTENTICACIÓN =================
 @Composable
-fun AuthScreen(
-    isTeacherMode: Boolean,
-    snackbarHostState: SnackbarHostState,
-    onBack: () -> Unit,
-    onLoginSuccess: (String, String, Boolean) -> Unit
-) {
+fun AuthScreen(isLoginMode: Boolean, snackbarHostState: SnackbarHostState, onBack: () -> Unit, onLoginSuccess: (String, String, Boolean) -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var isLoginMode by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = if (isTeacherMode) "Portal de Profesores" else "Portal de Alumnos",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            text = if (isLoginMode) "Inicia sesión en tu cuenta" else "Crea una cuenta nueva",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
+    Column(modifier = Modifier.fillMaxSize().padding(24.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = if (isLoginMode) "Iniciar Sesión" else "Nueva Cuenta", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
         Spacer(modifier = Modifier.height(32.dp))
 
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text("Usuario") },
+            label = { Text("Usuario ") },
             leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
@@ -223,6 +203,16 @@ fun AuthScreen(
             singleLine = true
         )
 
+        if (!isLoginMode) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "💡 Usa al menos 6 caracteres, combinando letras y números.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
@@ -231,9 +221,12 @@ fun AuthScreen(
                     coroutineScope.launch { snackbarHostState.showSnackbar("Llena todos los campos") }
                     return@Button
                 }
+                if (!isLoginMode && (username.length < 3 || password.length < 6)) {
+                    coroutineScope.launch { snackbarHostState.showSnackbar("Usuario o contraseña no válidos") }
+                    return@Button
+                }
 
-                // Aquí enviamos el isTeacherMode para que Flask sepa si darle poder de Admin o no
-                val user = User(username = username, password = password, is_admin = isTeacherMode)
+                val user = User(username = username, password = password, is_admin = false)
 
                 if (isLoginMode) {
                     RetrofitClient.apiService.loginUser(user).enqueue(object : retrofit2.Callback<LoginResponse> {
@@ -242,145 +235,114 @@ fun AuthScreen(
                                 val body = response.body()!!
                                 onLoginSuccess(body.token!!, body.username ?: "Usuario", body.is_admin ?: false)
                             } else {
-                                coroutineScope.launch { snackbarHostState.showSnackbar("Error de acceso: Verifica tu rol o contraseña") }
+                                coroutineScope.launch { snackbarHostState.showSnackbar("No ha sido posible iniciar sesion, intenta de nuevo") }
                             }
                         }
-                        override fun onFailure(call: retrofit2.Call<LoginResponse>, t: Throwable) {
-                            coroutineScope.launch { snackbarHostState.showSnackbar("Fallo de conexión al servidor") }
-                        }
+                        override fun onFailure(call: retrofit2.Call<LoginResponse>, t: Throwable) {}
                     })
                 } else {
+                    // Registro
                     RetrofitClient.apiService.registerUser(user).enqueue(object : retrofit2.Callback<ApiResponse> {
                         override fun onResponse(call: retrofit2.Call<ApiResponse>, response: retrofit2.Response<ApiResponse>) {
                             if (response.isSuccessful) {
-                                coroutineScope.launch { snackbarHostState.showSnackbar("¡Registrado! Ahora inicia sesión.") }
-                                isLoginMode = true
+                                coroutineScope.launch { snackbarHostState.showSnackbar("Cuenta creada con éxito") }
+
+                                // Auto-login inmediato para entrar directo al portal
+                                RetrofitClient.apiService.loginUser(user).enqueue(object : retrofit2.Callback<LoginResponse> {
+                                    override fun onResponse(call: retrofit2.Call<LoginResponse>, loginResponse: retrofit2.Response<LoginResponse>) {
+                                        if (loginResponse.isSuccessful && loginResponse.body()?.token != null) {
+                                            val body = loginResponse.body()!!
+                                            onLoginSuccess(body.token!!, body.username ?: username, body.is_admin ?: false)
+                                        }
+                                    }
+                                    override fun onFailure(call: retrofit2.Call<LoginResponse>, t: Throwable) {}
+                                })
+
                             } else {
-                                coroutineScope.launch { snackbarHostState.showSnackbar("El usuario ya existe") }
+                                coroutineScope.launch { snackbarHostState.showSnackbar("El nombre de usuario no está disponible o no es válido") }
                             }
                         }
                         override fun onFailure(call: retrofit2.Call<ApiResponse>, t: Throwable) {}
                     })
                 }
             },
-            modifier = Modifier.fillMaxWidth().height(50.dp),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Text(if (isLoginMode) "Entrar" else "Registrarme", fontSize = 16.sp)
-        }
+            modifier = Modifier.fillMaxWidth().height(50.dp), shape = RoundedCornerShape(12.dp)
+        ) { Text(if (isLoginMode) "Entrar" else "Crear Cuenta", fontSize = 16.sp) }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        TextButton(onClick = { isLoginMode = !isLoginMode }) {
-            Text(if (isLoginMode) "¿No tienes cuenta? Regístrate" else "¿Ya tienes cuenta? Inicia sesión")
-        }
-
-        TextButton(onClick = { onBack() }) {
-            Text("← Cambiar de Rol", color = MaterialTheme.colorScheme.secondary)
-        }
+        TextButton(onClick = { onBack() }) { Text("← Volver", color = MaterialTheme.colorScheme.secondary) }
     }
 }
 
-// ================== PANTALLA 3: PANEL PRINCIPAL (CRUD) ==================
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    token: String,
-    username: String,
-    isAdmin: Boolean,
-    navController: NavController,
-    snackbarHostState: SnackbarHostState
-) {
-    var alumnos by remember { mutableStateOf(listOf<Alumno>()) }
+fun StoreScreen(token: String, username: String, isAdmin: Boolean, navController: NavController, snackbarHostState: SnackbarHostState) {
+    var juegos by remember { mutableStateOf(listOf<Videojuego>()) }
     var showDialog by remember { mutableStateOf(false) }
-    var alumnoEnEdicion by remember { mutableStateOf<Alumno?>(null) }
+    var showExitDialog by remember { mutableStateOf(false) } // Controla la alerta de salida
+    var juegoEnEdicion by remember { mutableStateOf<Videojuego?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
-    fun cargarAlumnos() {
-        RetrofitClient.apiService.obtenerAlumnos(token).enqueue(object : retrofit2.Callback<AlumnosResponse> {
-            override fun onResponse(call: retrofit2.Call<AlumnosResponse>, response: retrofit2.Response<AlumnosResponse>) {
-                if (response.isSuccessful) { alumnos = response.body()?.alumnos ?: emptyList() }
+    // 1. Interceptar el botón de "Atrás" físico del celular para confirmar salida
+    BackHandler {
+        showExitDialog = true
+    }
+
+    fun cargarJuegos() {
+        RetrofitClient.apiService.obtenerJuegos(token).enqueue(object : retrofit2.Callback<VideojuegosResponse> {
+            override fun onResponse(call: retrofit2.Call<VideojuegosResponse>, response: retrofit2.Response<VideojuegosResponse>) {
+                if (response.isSuccessful) { juegos = response.body()?.juegos ?: emptyList() }
             }
-            override fun onFailure(call: retrofit2.Call<AlumnosResponse>, t: Throwable) {}
+            override fun onFailure(call: retrofit2.Call<VideojuegosResponse>, t: Throwable) {}
         })
     }
 
-    LaunchedEffect(Unit) { cargarAlumnos() }
+    LaunchedEffect(Unit) { cargarJuegos() }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (isAdmin) "Panel de Control" else "Mi Perfil") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
-                ),
+                title = { Text(if (isAdmin) "Inventario" else "Catálogo de Juegos") },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = MaterialTheme.colorScheme.onPrimary, actionIconContentColor = MaterialTheme.colorScheme.onPrimary),
                 actions = {
-                    IconButton(onClick = { navController.navigate("role_selection") { popUpTo(0) } }) {
+                    // Botón superior de salida con confirmación
+                    IconButton(onClick = { showExitDialog = true }) {
                         Icon(Icons.Default.ExitToApp, contentDescription = "Cerrar Sesión")
                     }
                 }
             )
         },
         floatingActionButton = {
-            // Solo mostramos el botón flotante si es admin o si el alumno aún no tiene registro
-            if (isAdmin || alumnos.isEmpty()) {
-                FloatingActionButton(
-                    onClick = { alumnoEnEdicion = null; showDialog = true },
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    contentColor = MaterialTheme.colorScheme.onTertiary
-                ) {
+            if (isAdmin) {
+                FloatingActionButton(onClick = { juegoEnEdicion = null; showDialog = true }, containerColor = MaterialTheme.colorScheme.tertiary, contentColor = MaterialTheme.colorScheme.onTertiary) {
                     Icon(Icons.Default.Add, contentDescription = "Agregar")
                 }
             }
         }
     ) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp)) {
-
-            Text(
-                text = "Hola, $username",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
+            Text(if (isAdmin) "Bienvenido $username" else "Bienvenido $username", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 16.dp))
 
             LazyColumn(modifier = Modifier.weight(1f)) {
-                items(alumnos) { alumno ->
-                    ElevatedCard(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                items(juegos) { juego ->
+                    ElevatedCard(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp), shape = RoundedCornerShape(12.dp)) {
+                        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                             Column(modifier = Modifier.weight(1f)) {
-                                Text(alumno.nombre, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                                Text("Matrícula: ${alumno.matricula}", style = MaterialTheme.typography.bodyMedium)
+                                Text(juego.titulo, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                                Text(juego.plataforma, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
                                 Spacer(modifier = Modifier.height(4.dp))
-                                Badge(containerColor = if (alumno.inscrito) Color(0xFF4CAF50) else Color(0xFFF44336)) {
-                                    Text(
-                                        text = if (alumno.inscrito) "Activo" else "Baja",
-                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                        color = Color.White
-                                    )
-                                }
-                            }
-
-                            IconButton(onClick = { alumnoEnEdicion = alumno; showDialog = true }) {
-                                Icon(Icons.Default.Edit, contentDescription = "Editar", tint = MaterialTheme.colorScheme.primary)
+                                Text(juego.descripcion, style = MaterialTheme.typography.bodySmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                                Text("Publicado por: ${juego.vendedor_nombre}", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text("$${juego.precio} MXN", color = Color(0xFF2E7D32), fontWeight = FontWeight.ExtraBold)
                             }
 
                             if (isAdmin) {
+                                IconButton(onClick = { juegoEnEdicion = juego; showDialog = true }) { Icon(Icons.Default.Edit, contentDescription = "Editar", tint = MaterialTheme.colorScheme.secondary) }
                                 IconButton(onClick = {
-                                    RetrofitClient.apiService.borrarAlumno(token, alumno.id!!).enqueue(object : retrofit2.Callback<ApiResponse> {
+                                    RetrofitClient.apiService.borrarJuego(token, juego.id!!).enqueue(object : retrofit2.Callback<ApiResponse> {
                                         override fun onResponse(call: retrofit2.Call<ApiResponse>, response: retrofit2.Response<ApiResponse>) {
-                                            if (response.isSuccessful) {
-                                                cargarAlumnos()
-                                                coroutineScope.launch { snackbarHostState.showSnackbar("Registro eliminado") }
-                                            }
+                                            if (response.isSuccessful) { cargarJuegos(); coroutineScope.launch { snackbarHostState.showSnackbar("Juego eliminado") } }
                                         }
                                         override fun onFailure(call: retrofit2.Call<ApiResponse>, t: Throwable) {}
                                     })
@@ -393,48 +355,71 @@ fun HomeScreen(
         }
     }
 
-    // --- FORMULARIO DIALOG ---
-    if (showDialog) {
-        var nombre by remember { mutableStateOf(alumnoEnEdicion?.nombre ?: "") }
-        var matricula by remember { mutableStateOf(alumnoEnEdicion?.matricula ?: "") }
-        var inscrito by remember { mutableStateOf(alumnoEnEdicion?.inscrito ?: true) }
+    // Modal de confirmación para cerrar sesión / ir atrás
+    if (showExitDialog) {
+        AlertDialog(
+            onDismissRequest = { showExitDialog = false },
+            title = { Text("Cerrar Sesión") },
+            text = { Text("¿Estás seguro de que deseas cerrar tu sesión?") },
+            confirmButton = {
+                Button(onClick = {
+                    showExitDialog = false
+                    navController.navigate("welcome") { popUpTo(0) }
+                }) { Text("Sí, salir") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showExitDialog = false }) { Text("Cancelar") }
+            }
+        )
+    }
+
+    // Modal de edición con restricción numérica estricta para el precio
+    if (showDialog && isAdmin) {
+        var titulo by remember { mutableStateOf(juegoEnEdicion?.titulo ?: "") }
+        var plataforma by remember { mutableStateOf(juegoEnEdicion?.plataforma ?: "") }
+        var descripcion by remember { mutableStateOf(juegoEnEdicion?.descripcion ?: "") }
+        var precio by remember { mutableStateOf(juegoEnEdicion?.precio?.toString() ?: "") }
 
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text(if (alumnoEnEdicion == null) "Datos del Alumno" else "Editar Datos") },
+            title = { Text(if (juegoEnEdicion == null) "Agregar Videojuego" else "Actualizar") },
             text = {
                 Column {
-                    OutlinedTextField(value = nombre, onValueChange = { nombre = it }, label = { Text("Nombre completo") }, singleLine = true)
+                    OutlinedTextField(value = titulo, onValueChange = { titulo = it }, label = { Text("Título") }, singleLine = true)
                     Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(value = matricula, onValueChange = { matricula = it }, label = { Text("Matrícula") }, singleLine = true)
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
-                        Checkbox(checked = inscrito, onCheckedChange = { inscrito = it })
-                        Text("¿Está inscrito activamente?")
-                    }
+                    OutlinedTextField(value = plataforma, onValueChange = { plataforma = it }, label = { Text("Plataforma") }, singleLine = true)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(value = descripcion, onValueChange = { descripcion = it }, label = { Text("Descripción") }, maxLines = 3)
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // 2. Campo de precio protegido: solo acepta números y punto decimal
+                    OutlinedTextField(
+                        value = precio,
+                        onValueChange = { input ->
+                            if (input.all { it.isDigit() || it == '.' }) {
+                                precio = input
+                            }
+                        },
+                        label = { Text("Precio MXN") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        singleLine = true
+                    )
                 }
             },
             confirmButton = {
                 Button(onClick = {
-                    if (nombre.isBlank() || matricula.isBlank()) {
-                        coroutineScope.launch { snackbarHostState.showSnackbar("Llena los campos requeridos") }
+                    if (titulo.isBlank() || plataforma.isBlank() || precio.isBlank() || descripcion.isBlank()) {
+                        coroutineScope.launch { snackbarHostState.showSnackbar("Llena todos los campos") }
                         return@Button
                     }
-                    val nuevo = Alumno(nombre = nombre, matricula = matricula, inscrito = inscrito)
-                    val call = if (alumnoEnEdicion == null) RetrofitClient.apiService.crearAlumno(token, nuevo)
-                    else RetrofitClient.apiService.actualizarAlumno(token, alumnoEnEdicion!!.id!!, nuevo)
-
+                    val numPrecio = precio.toDoubleOrNull() ?: 0.0
+                    val nuevo = Videojuego(titulo = titulo, plataforma = plataforma, precio = numPrecio, descripcion = descripcion)
+                    val call = if (juegoEnEdicion == null) RetrofitClient.apiService.crearJuego(token, nuevo) else RetrofitClient.apiService.actualizarJuego(token, juegoEnEdicion!!.id!!, nuevo)
                     call.enqueue(object : retrofit2.Callback<ApiResponse> {
                         override fun onResponse(call: retrofit2.Call<ApiResponse>, response: retrofit2.Response<ApiResponse>) {
-                            if (response.isSuccessful) {
-                                cargarAlumnos()
-                                showDialog = false
-                            } else {
-                                coroutineScope.launch { snackbarHostState.showSnackbar("La matrícula ya está registrada o datos inválidos") }
-                            }
+                            if (response.isSuccessful) { cargarJuegos(); showDialog = false }
                         }
-                        override fun onFailure(call: retrofit2.Call<ApiResponse>, t: Throwable) {
-                            coroutineScope.launch { snackbarHostState.showSnackbar("Error de conexión") }
-                        }
+                        override fun onFailure(call: retrofit2.Call<ApiResponse>, t: Throwable) {}
                     })
                 }) { Text("Guardar") }
             },
