@@ -1,4 +1,4 @@
-# Práctica 2: Aplicación móvil básica para operaciones CRUD con un servicio REST
+# Práctica 2: Aplicación móvil básica
 
 * Instituto Politécnico Nacional
 * Escuela Superior de Cómputo (ESCOM)
@@ -69,33 +69,33 @@ Para levantar el servicio backend en un equipo limpio que únicamente cuente con
 
 1. **Pantalla de Inicio**
 
-![alt text](image.png)
+![alt text](/Flask-Compose-Login-API/doc/img/image.png)
 
 2. **Pantalla de Registro e Iniciar Sesión**
 
-![alt text](image-1.png)
-![alt text](image-2.png)
+![alt text](/Flask-Compose-Login-API/doc/img/image-1.png)
+![alt text](/Flask-Compose-Login-API/doc/img/image-2.png)
 
 3. **Vista como Vendedor**
 **Vista principal del vendedor**
 
-![alt text](image-3.png)
+![alt text](/Flask-Compose-Login-API/doc/img/image-3.png)
 
 **Agregar un nuevo registro de videojuego**
 
-![alt text](image-4.png)
+![alt text](/Flask-Compose-Login-API/doc/img/image-4.png)
 
 **Editar registro**
 
-![alt text](image-5.png)
+![alt text](/Flask-Compose-Login-API/doc/img/image-5.png)
 
 **Eliminar registro**
 
-![alt text](image-6.png)
+![alt text](/Flask-Compose-Login-API/doc/img/image-6.png)
 
 4. **Vista como Cliente**
 
-![alt text](image-7.png)
+![alt text](/Flask-Compose-Login-API/doc/img/image-7.png)
 
 ## **7. Conclusión**
 
