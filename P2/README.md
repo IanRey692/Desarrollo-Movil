@@ -1,11 +1,39 @@
-# Práctica 2: Aplicación móvil básica
+<div align="center">
 
-* Instituto Politécnico Nacional
-* Escuela Superior de Cómputo (ESCOM)
-* Ingeniería en Sistemas Computacionales (Plan 2020)
-* Desarrollo de Aplicaciones Móviles Nativas
-* Ian Gael Reyna Mendoza
+<table width="100%">
+  <tr align="center">
+    <td width="20%">
+      <img src="Flask-Compose-Login-API/doc/img/ipn.jpg" alt="Logo IPN" width="90"/>
+    </td>
+    <td width="60%">
+      <h2><strong>INSTITUTO POLITÉCNICO NACIONAL</strong></h2>
+      <h3><strong>ESCUELA SUPERIOR DE CÓMPUTO</strong></h3>
+    </td>
+    <td width="20%">
+      <img src="Flask-Compose-Login-API/doc/img/escom.png" alt=Logo ESCOM" width="120"/>
+    </td>
+  </tr>
+</table>
 
+<h2><strong>DESARROLLO DE APLICACIONES MÓVILES</strong></h2>
+
+<br><br><br>
+
+<h1 style="font-size: 3em;"><strong>P2</strong></h1>
+<h2><strong>APLICACIÓN MÓVIL BÁSICA</strong></h2>
+
+<br><br><br><br>
+
+<h3><strong>POR</strong></h3>
+<h2><strong>REYNA MENDOZA IAN GAEL</strong></h2>
+<h3><strong>GRUPO 7CV4</strong></h3>
+
+<br><br><br><br>
+
+<h3><strong>PROFESOR</strong></h3>
+<h3><strong>GABRIEL HURTADO AVILES</strong></h3>
+
+</div>
 ---
 
 ## **1. Introducción**
@@ -31,6 +59,31 @@ La aplicación implementa un sistema de control de acceso seguro mediante tokens
 * **Docker Compose:** Es una herramienta que permite configurar y ejecutar varios contenedores al mismo tiempo. La configuración se guarda en un archivo llamado `docker-compose.yml`, por lo que toda la aplicación y sus servicios pueden iniciarse con un solo comando.
 
 * **Servicio REST y ORM:** El backend permite comunicarse con la aplicación mediante diferentes rutas HTTP, como GET, POST, PUT y DELETE, y la información se envía normalmente en formato JSON. SQLAlchemy es un ORM que facilita trabajar con la base de datos PostgreSQL desde Python, ya que permite manejar las tablas como objetos sin tener que escribir directamente todas las consultas SQL.
+
+## De lo Realizado
+
+Para asegurar la correcta comunicación entre la aplicación móvil y el backend, se implementaron las siguientes configuraciones y estructuras
+
+###  Conectividad y Consumo de API
+* **Permisos de Red:** Debido a las estrictas políticas de seguridad de Android, se configuraron dos directivas clave en el `AndroidManifest.xml` para permitir que el emulador saliera a internet y se comunicara mediante tráfico HTTP plano con los contenedores de Docker.
+
+![alt text](Flask-Compose-Login-API/doc/img/image-8.png)
+
+* **Integración de Retrofit:** Para habilitar el consumo del servicio REST, se añadió el cliente HTTP **Retrofit** y el convertidor **Gson** dentro de las dependencias del archivo `build.gradle.kts (Module :app)`.
+
+![alt text](Flask-Compose-Login-API/doc/img/image-9.png)
+
+* **Cliente Base (`RetrofitClient.kt`):** Se instanció el objeto cliente configurando la URL base hacia la IP especial del emulador (`http://10.0.2.2:5000/`), permitiendo el alcance directo al contenedor local.
+###  Estructura de Datos y Seguridad JWT
+En la capa móvil, se adaptaron los modelos de datos para soportar la validación de roles y la gestión de sesiones seguras:
+* **`LoginResponse.kt`:** Clase estructurada para recibir y procesar el estado de la autenticación, almacenando el mensaje, token de sesión, nombre de usuario y el indicador de permisos de administrador (`is_admin`).
+* **`Videojuego.kt`:** Modelo de datos principal encargado de mapear y gestionar la información de los registros del inventario.
+
+![alt text](Flask-Compose-Login-API/doc/img/image-10.png)
+
+* **Endpoints Protegidos (`ApiService.kt`):** Se estructuraron los métodos de inicio de sesión y registro (`POST`). Posteriormente, se amplió la interfaz con las cuatro operaciones CRUD (Obtener, Crear, Actualizar y Borrar), inyectando dinámicamente el encabezado de autorización (`Authorization: Bearer <TOKEN>`) para cumplir estrictamente con los lineamientos de seguridad del servidor.
+
+![alt text](Flask-Compose-Login-API/doc/img/image-11.png)
 
 ---
 
