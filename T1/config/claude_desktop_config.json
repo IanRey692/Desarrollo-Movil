@@ -1,0 +1,59 @@
+{
+  "preferences": {
+    "coworkLegacyRootGrantsPruned": true,
+    "launchPreviewPersistedWorkspaces": [],
+    "launchPreviewSessionScopedSessions": [],
+    "earlyWindowShowLatched": true,
+    "remoteToolsDeviceName": "pc-ian",
+    "coworkHipaaRestricted": false,
+    "coworkWebSearchEnabled": true,
+    "orgWorkAcrossAppsDisabled": true,
+    "coworkPreferredBrowser": "built_in",
+    "coworkBrowserToolsEnabled": false,
+    "coworkModelAutoFallbackByAccount": {
+      "ce9581ba-1809-4990-938f-3164f6a194e5": true
+    },
+    "epitaxyPrefs": {
+      "desktop-frame.paneStore.v1": {
+        "state": {
+          "extraPanesByMode": {},
+          "colWeightsByMode": {},
+          "rowSplit": 0.5,
+          "draftNonce": 0,
+          "lastPrimaryCodeSession": null
+        },
+        "version": 4
+      },
+      "starred-local-code-sessions": [],
+      "starred-cowork-spaces": [],
+      "starred-session-groups": [],
+      "dframe-group-scopes": {},
+      "dframe-local-slice": {
+        "pinnedOrder": [],
+        "homeProjectsPinnedOrder": []
+      },
+      "ccd-sessions-filter": {
+        "state": {
+          "selectedProjects": []
+        },
+        "version": 0
+      }
+    },
+    "coworkScheduledTasksEnabled": false,
+    "ccdScheduledTasksEnabled": false,
+    "bypassPermissionsGateByAccount": {
+      "ce9581ba-1809-4990-938f-3164f6a194e5": false
+    }
+  },
+  "coworkUserFilesPath": "C:\\Users\\Ian\\Claude",
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "C:\\Users\\Ian\\Documents\\mcp_workspace"
+      ]
+    }
+  }
+}
