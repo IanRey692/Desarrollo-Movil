@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Section1Screen(sharedViewModel: SharedViewModel) {
-    // Escuchamos el estado del texto compartido
+    // Escucha el estado del texto compartido
     val sharedText by sharedViewModel.sharedText.collectAsState()
 
     Column(
@@ -32,7 +32,7 @@ fun Section1Screen(sharedViewModel: SharedViewModel) {
     ) {
         Text("Entrada de Texto", style = MaterialTheme.typography.headlineMedium)
 
-        // 1. Campo de texto simple (Vinculado a la Sección 4)
+        // 1. Campo de texto simple
         OutlinedTextField(
             value = sharedText,
             onValueChange = { sharedViewModel.updateSharedText(it) },
@@ -40,7 +40,7 @@ fun Section1Screen(sharedViewModel: SharedViewModel) {
             modifier = Modifier.fillMaxWidth()
         )
         Text(
-            "Permite ingresar texto libre. Lo que escribas aquí se guardará en el SharedViewModel y aparecerá en la lista de la Sección 4.",
+            "Permite ingresar texto libre",
             style = MaterialTheme.typography.bodySmall
         )
         Divider()
@@ -96,7 +96,7 @@ fun Section1Screen(sharedViewModel: SharedViewModel) {
 
         Divider()
 
-        // 4. Campo con teclado específico (Teléfono)
+        // 4. Campo con teclado específico
         var phone by remember { mutableStateOf("") }
         OutlinedTextField(
             value = phone,
@@ -106,7 +106,7 @@ fun Section1Screen(sharedViewModel: SharedViewModel) {
             modifier = Modifier.fillMaxWidth()
         )
         Text(
-            "Despliega un teclado numérico optimizado para introducir números de teléfono.",
+            "Despliega un teclado numérico optimizado.",
             style = MaterialTheme.typography.bodySmall
         )
         Divider()

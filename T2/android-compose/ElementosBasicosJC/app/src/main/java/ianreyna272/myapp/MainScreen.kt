@@ -26,8 +26,8 @@ fun MainScreen(sharedViewModel: SharedViewModel = viewModel()) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("section1") { Section1Screen(sharedViewModel) }
-            composable("section2") { Text("Sección 2: Botones") }
-            composable("section3") { Text("Sección 3: Selección") }
+            composable("section2") { Section2Screen() }
+            composable("section3") { Section3Screen() }
             composable("section4") { Text("Sección 4: Listas") }
             composable("section5") { Text("Sección 5: Info") }
             composable("section6") { Text("Sección 6: Contenedores") }
