@@ -23,4 +23,16 @@
         android:label="Botones y Acciones"
         tools:layout="@layout/fragment_seccion2" />
 
+    <fragment
+        android:id="@+id/section4Fragment"
+        android:name="ianreyna272.myapp.Section4Fragment"
+        android:label="Botones y Acciones"
+        tools:layout="@layout/fragment_seccion2" />
+
+    <fragment
+        android:id="@+id/section5Fragment"
+        android:name="ianreyna272.myapp.Section5Fragment"
+        android:label="Botones y Acciones"
+        tools:layout="@layout/fragment_seccion2" />
+
     </navigation>

@@ -1,0 +1,65 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Información y Diálogos"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Carga Indeterminada" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Indica que un proceso (como red o base de datos) se está ejecutando." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <ProgressBar
+    android:id="@+id/progress_circular"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Barra de Progreso" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Muestra el avance exacto de una tarea." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <ProgressBar
+    android:id="@+id/progress_horizontal"
+    style="?android:attr/progressBarStyleHorizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:max="100"
+    android:progress="0"
+    android:layout_marginBottom="8dp"/>
+    <Button
+    android:id="@+id/btn_aumentar_progreso"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Aumentar progreso (+10%)"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Mensaje Snackbar" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Notificación en la parte inferior con opción de deshacer acción." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <Button
+    android:id="@+id/btn_snackbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Mostrar Snackbar"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Cuadro de Diálogo" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Interrumpe al usuario para confirmar una decisión." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <Button
+    android:id="@+id/btn_dialogo"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Mostrar Alerta"
+    android:layout_marginBottom="32dp"/>
+
+    </LinearLayout>
+    </ScrollView>
