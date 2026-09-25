@@ -1,0 +1,90 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Botones y Acciones"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Botón Relleno" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="El botón principal para la acción más importante." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <Button
+    android:id="@+id/btn_simple"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Confirmar Acción"
+    android:layout_marginBottom="16dp"/>
+
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Botón de Contorno" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Acciones secundarias que no deben robar atención." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <Button
+    android:id="@+id/btn_contorno"
+    style="?attr/materialButtonOutlinedStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Cancelar"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Casilla de Verificación" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Permite seleccionar múltiples opciones." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <CheckBox
+    android:id="@+id/cb_terminos"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Acepto los términos y condiciones"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Interruptor (Switch)" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Activa o desactiva una configuración al instante." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <com.google.android.material.switchmaterial.SwitchMaterial
+    android:id="@+id/sw_notificaciones"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Recibir notificaciones"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Botones de Radio" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Solo permite elegir una opción del grupo." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <RadioGroup
+    android:id="@+id/rg_dificultad"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp">
+
+    <RadioButton
+    android:id="@+id/rb_facil"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Fácil" />
+    <RadioButton
+    android:id="@+id/rb_dificil"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Difícil" />
+    </RadioGroup>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Botón Flotante (FAB)" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Usado para la acción principal y global de la pantalla." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:id="@+id/fab_agregar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:src="@android:drawable/ic_input_add"
+    app:tint="@android:color/white"
+    android:layout_marginBottom="32dp"/>
+
+    </LinearLayout>
+    </ScrollView>

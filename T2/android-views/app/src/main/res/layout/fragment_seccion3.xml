@@ -1,0 +1,77 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Selección de Datos"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:layout_marginBottom="16dp"/>
+
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Menú Desplegable (Spinner)" android:textStyle="bold"/>
+    <Spinner
+    android:id="@+id/spinner_opciones"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Calificación (RatingBar)" android:textStyle="bold"/>
+    <RatingBar
+    android:id="@+id/rating_bar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:numStars="5"
+    android:stepSize="0.5"
+    android:layout_marginBottom="16dp"/>
+
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Deslizador (SeekBar)" android:textStyle="bold"/>
+    <SeekBar
+    android:id="@+id/seek_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:max="100"
+    android:layout_marginBottom="8dp"/>
+    <TextView
+    android:id="@+id/tv_seek_valor"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Valor: 0"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Selectores Emergentes (Pickers)" android:textStyle="bold"/>
+    <Button
+    android:id="@+id/btn_fecha"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Seleccionar Fecha"/>
+    <TextView
+    android:id="@+id/tv_fecha"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Fecha: No seleccionada"
+    android:layout_marginBottom="8dp"/>
+
+    <Button
+    android:id="@+id/btn_hora"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Seleccionar Hora"/>
+    <TextView
+    android:id="@+id/tv_hora"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Hora: No seleccionada"
+    android:layout_marginBottom="32dp"/>
+
+    </LinearLayout>
+    </ScrollView>
