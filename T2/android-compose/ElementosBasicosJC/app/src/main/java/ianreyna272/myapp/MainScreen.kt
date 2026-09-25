@@ -28,9 +28,9 @@ fun MainScreen(sharedViewModel: SharedViewModel = viewModel()) {
             composable("section1") { Section1Screen(sharedViewModel) }
             composable("section2") { Section2Screen() }
             composable("section3") { Section3Screen() }
-            composable("section4") { Text("Sección 4: Listas") }
-            composable("section5") { Text("Sección 5: Info") }
-            composable("section6") { Text("Sección 6: Contenedores") }
+            composable("section4") { Section4Screen() }
+            composable("section5") { Section5Screen() }
+            composable(route = "section6") { Section6Screen(sharedViewModel) }
         }
     }
 }
