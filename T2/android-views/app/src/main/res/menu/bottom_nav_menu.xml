@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/section1Fragment" android:title="Texto" android:icon="@android:drawable/ic_menu_edit" />
+    <item android:id="@+id/section2Fragment" android:title="Botones" android:icon="@android:drawable/ic_menu_send" />
+    <item android:id="@+id/section3Fragment" android:title="Selección" android:icon="@android:drawable/ic_menu_agenda" />
+    <item android:id="@+id/section4Fragment" android:title="Listas" android:icon="@android:drawable/ic_menu_sort_by_size" />
+    <item android:id="@+id/section5Fragment" android:title="Info" android:icon="@android:drawable/ic_menu_info_details" />
+    <item android:id="@+id/section6Fragment" android:title="Layouts" android:icon="@android:drawable/ic_menu_gallery" />
+</menu>
