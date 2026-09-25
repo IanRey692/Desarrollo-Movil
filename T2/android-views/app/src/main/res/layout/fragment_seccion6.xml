@@ -1,0 +1,82 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Layouts y Conexión"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Dato Transversal (Desde Sección 1)" android:textStyle="bold" android:textColor="@android:color/holo_green_dark"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="El texto que escribas en la primera pestaña aparece aquí en tiempo real:" android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <TextView
+    android:id="@+id/tv_dato_recibido"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Esperando dato..."
+    android:textSize="18sp"
+    android:textStyle="italic"
+    android:background="@android:color/darker_gray"
+    android:textColor="@android:color/white"
+    android:padding="12dp"
+    android:layout_marginBottom="24dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="FrameLayout" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Apila vistas una sobre otra como capas." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="@android:color/holo_red_light"
+    android:layout_marginBottom="16dp">
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Capa del Fondo"
+    android:layout_gravity="top|start"
+    android:padding="8dp"/>
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Capa Frontal (Centro)"
+    android:layout_gravity="center"
+    android:textStyle="bold"
+    android:textSize="16sp"/>
+    </FrameLayout>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ConstraintLayout" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Posicionamiento relativo anclando vistas entre sí." android:textSize="12sp" android:layout_marginBottom="8dp"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="@android:color/holo_blue_light"
+    android:layout_marginBottom="16dp">
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Anclado Izquierda"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:layout_marginStart="16dp"/>
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Anclado Derecha"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:layout_marginEnd="16dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+    </ScrollView>

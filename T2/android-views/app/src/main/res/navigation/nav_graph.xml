@@ -35,4 +35,10 @@
         android:label="Botones y Acciones"
         tools:layout="@layout/fragment_seccion2" />
 
+    <fragment
+        android:id="@+id/section6Fragment"
+        android:name="ianreyna272.myapp.Section6Fragment"
+        android:label="Botones y Acciones"
+        tools:layout="@layout/fragment_seccion2" />
+
     </navigation>
