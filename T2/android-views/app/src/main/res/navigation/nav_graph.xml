@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/section1Fragment"
-        android:name="ianreyna272.myapp.Seccion1"
+        android:name="ianreyna272.myapp.Section1Fragment"
         android:label="Entrada de Texto"
         tools:layout="@layout/fragment_seccion1" />
 </navigation>

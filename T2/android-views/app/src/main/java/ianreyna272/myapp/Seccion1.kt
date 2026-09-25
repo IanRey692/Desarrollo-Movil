@@ -1,59 +1,66 @@
 package ianreyna272.myapp
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class Section1Fragment : Fragment() {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [Seccion1.newInstance] factory method to
- * create an instance of this fragment.
- */
-class Seccion1 : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_seccion1, container, false)
-    }
+        val view = inflater.inflate(R.layout.fragment_seccion1, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Seccion1.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Seccion1().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+
+        // --- 1. Lógica para el Dato Transversal ---
+        // Declaramos el tipo aquí para no usar los símbolos que oculta el navegador
+        val etTransversal: TextInputEditText = view.findViewById(R.id.et_transversal)
+
+        etTransversal.setText(sharedViewModel.sharedText.value)
+
+        etTransversal.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                sharedViewModel.updateSharedText(s.toString())
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        // --- 2. Lógica para la validación de texto ---
+        val layoutValidacion: TextInputLayout = view.findViewById(R.id.layout_validacion)
+        val etValidacion: TextInputEditText = view.findViewById(R.id.et_validacion)
+
+        etValidacion.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.toString().trim().length < 3) {
+                    layoutValidacion.error = "Debe tener al menos 3 caracteres"
+                } else {
+                    layoutValidacion.error = null
                 }
             }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        // --- 3. Lógica para el menú de sugerencias (Dropdown) ---
+        val autoComplete: AutoCompleteTextView = view.findViewById(R.id.autoCompleteOpciones)
+        val opciones = arrayOf("Rojo", "Verde", "Azul", "Amarillo", "Morado")
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, opciones)
+        autoComplete.setAdapter(adapter)
+
+        return view
     }
 }
